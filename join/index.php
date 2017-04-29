@@ -1,3 +1,38 @@
+<?php
+
+//フォームからデータがPOST送信されたとき
+if (!empty($_POST)) {
+//エラー項目の確認
+//ニックネーム
+  if($_POST['nick_name'] == ''){
+    $error['nick_name'] = 'blank';
+  }
+
+  //e-mail
+  if($_POST['email'] == ''){
+  $error['email'] = 'blank';
+  
+}
+//パスワード(空チェック,文字長チェック:4文字以上)
+  if($_POST['password'] == '') {
+  $error['password'] = 'blank';
+}else if (strlen($_POST['password']) < 4) {
+  $error['password'] = 'length';
+  # code...
+}
+
+//エラーがない場合
+if (empty($error)){
+  header('Location: check.php');
+  # code...
+}
+    # code...
+  
+  # code...
+
+
+}
+?>
 <!DOCTYPE html>
 <html lang="ja">
   <head>
@@ -46,11 +81,19 @@
       <div class="col-md-6 col-md-offset-3 content-margin-top">
         <legend>会員登録</legend>
         <form method="post" action="" class="form-horizontal" role="form">
+  
           <!-- ニックネーム -->
           <div class="form-group">
             <label class="col-sm-4 control-label">ニックネーム</label>
             <div class="col-sm-8">
-              <input type="text" name="nick_name" class="form-control" placeholder="例： Seed kun">
+            <?php if (isset($_POST['nick_name'])): ?>
+         <input type="text" name="nick_name" class="form-control" placeholder="例： seed@nex.com" value="<?php echo htmlspecialchars($_POST['nick_name'], ENT_QUOTES, 'UTF-8'); ?>">
+<?php else: ?>
+         <input type="text" name="nick_name" class="form-control" placeholder="例： seed@nex.com" value="">
+<?php endif; ?>
+        <?php if(isset($error['nick_name']) && $error['nick_name'] == 'blank') { ?>
+               <p class="error">* ニックネームを入力してください</p>
+              <?php } ?>
             </div>
           </div>
           <!-- メールアドレス -->
@@ -58,6 +101,10 @@
             <label class="col-sm-4 control-label">メールアドレス</label>
             <div class="col-sm-8">
               <input type="email" name="email" class="form-control" placeholder="例： seed@nex.com">
+              <?php if (isset($error['email']) && $error['email'] == 'blank') { ?>
+
+              <p class="error">*emailを入力してください</p>
+            <?php  } ?>
             </div>
           </div>
           <!-- パスワード -->
@@ -65,6 +112,16 @@
             <label class="col-sm-4 control-label">パスワード</label>
             <div class="col-sm-8">
               <input type="password" name="password" class="form-control" placeholder="">
+              <?php if (isset($error['password']) && $error['password'] == 'blank') { ?>
+
+              <p class="error">*パスワードを入力してください</p>
+
+            <?php  }?>
+            <?php if (isset($error['password']) && $error['password'] == 'length') { ?>
+             
+            <p class="error">*パスワードは4文字以上で入力してください</p>
+            <?php }?>
+   
             </div>
           </div>
           <!-- プロフィール写真 -->
