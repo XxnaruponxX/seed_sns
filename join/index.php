@@ -38,7 +38,7 @@ if (empty($error)){
   //画像をアップロードする
   $picture_path = date('YmdHis') . $_FILES['picture_path']['name'];
   move_uploaded_file($_FILES['picture_path']['tmp_name'], '../member_picture/' .  $picture_path);
-var_dump('picture_path');
+
   //セッションに値を保存
   $_SESSION['join'] = $_POST;
   $_SESSION['join']['picture_path'] = $picture_path;
