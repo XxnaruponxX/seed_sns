@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 //フォームからデータがPOST送信されたとき
 if (!empty($_POST)) {
 //エラー項目の確認
@@ -21,8 +21,27 @@ if (!empty($_POST)) {
   # code...
 }
 
+//画像ファイルの拡張子チェック($_FILES)
+$fileName = $_FILES['picture_path']['name'];
+if (!empty($fileName)){
+
+//拡張子を取得
+  $ext = substr($fileName, -3);
+  $ext = strtolower($ext);
+
+  if ($ext != 'jpg' && $ext != 'gif' && $ext != 'png'){
+    $error['picture_path'] = 'type';
+      }
+}
 //エラーがない場合
 if (empty($error)){
+  //画像をアップロードする
+  $picture_path = date('YmdHis') . $_FILES['picture_path']['name'];
+  move_uploaded_file($_FILES['picture_path']['tmp_name'], '../member_picture/' .  $picture_path);
+var_dump('picture_path');
+  //セッションに値を保存
+  $_SESSION['join'] = $_POST;
+  $_SESSION['join']['picture_path'] = $picture_path;
   header('Location: check.php');
   # code...
 }
@@ -70,7 +89,7 @@ if (empty($error)){
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
               <ul class="nav navbar-nav navbar-right">
               </ul>
-          </div>
+        </div>
           <!-- /.navbar-collapse -->
       </div>
       <!-- /.container-fluid -->
@@ -80,7 +99,7 @@ if (empty($error)){
     <div class="row">
       <div class="col-md-6 col-md-offset-3 content-margin-top">
         <legend>会員登録</legend>
-        <form method="post" action="" class="form-horizontal" role="form">
+        <form method="post" action="" class="form-horizontal" role="form" enctype="multipart/form-data">
   
           <!-- ニックネーム -->
           <div class="form-group">
@@ -133,6 +152,9 @@ if (empty($error)){
             <label class="col-sm-4 control-label">プロフィール写真</label>
             <div class="col-sm-8">
               <input type="file" name="picture_path" class="form-control">
+              <?php if(isset($error['picture_path']) && $error['picture_path'] == 'type'){ ?>
+               <p class="error">*写真は「.gif」「.jpg」「.png」の画像を指定してください。</p>
+              <?php } ?>
             </div>
           </div>
 

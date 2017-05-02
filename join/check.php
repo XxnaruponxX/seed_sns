@@ -1,3 +1,9 @@
+<?php
+
+session_start();
+
+
+?>
 <!DOCTYPE html>
 <html lang="ja">
   <head>
@@ -8,11 +14,11 @@
     <title>SeedSNS</title>
 
     <!-- Bootstrap -->
-    <link href="../../assets/css/bootstrap.css" rel="stylesheet">
-    <link href="../../assets/font-awesome/css/font-awesome.css" rel="stylesheet">
-    <link href="../../assets/css/form.css" rel="stylesheet">
-    <link href="../../assets/css/timeline.css" rel="stylesheet">
-    <link href="../../assets/css/main.css" rel="stylesheet">
+    <link href="../assets/css/bootstrap.css" rel="stylesheet">
+    <link href="../assets/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="../assets/css/form.css" rel="stylesheet">
+    <link href="../assets/css/timeline.css" rel="stylesheet">
+    <link href="../assets/css/main.css" rel="stylesheet">
     <!--
       designフォルダ内では2つパスの位置を戻ってからcssにアクセスしていることに注意！
      -->
@@ -52,11 +58,11 @@
                 <!-- 登録内容を表示 -->
                 <tr>
                   <td><div class="text-center">ニックネーム</div></td>
-                  <td><div class="text-center">Seed kun</div></td>
+                <td><div class="text-center"> <?php echo $_SESSION['join']['nick_name'];?> </div></td>
                 </tr>
                 <tr>
                   <td><div class="text-center">メールアドレス</div></td>
-                  <td><div class="text-center">seed@nex.com</div></td>
+                  <td><div class="text-center"><?php echo $_SESSION['join']['email'];?></div></td>
                 </tr>
                 <tr>
                   <td><div class="text-center">パスワード</div></td>
