@@ -120,7 +120,7 @@ if (empty($error)){
             <label class="col-sm-4 control-label">メールアドレス</label>
             <div class="col-sm-8">
               <?php if (isset($_POST['email'])): ?>
-         <input type="email" name="email" class="form-control" placeholder="例： seed@nex.com" value="<?php echo htmlspecialchars($_POST['email'], ENT_QUOTES, 'UTF-8'); ?>">
+         <input type="email" name="email" class="form-control" placeholder="例： seed@nex.com" value="<?php echo htmlspecialchars($_POST['nick_name'], ENT_QUOTES, 'UTF-8'); ?>">
 <?php else: ?>
          <input type="email" name="email" class="form-control" placeholder="例： seed@nex.com" value="">
 <?php endif; ?>
@@ -152,9 +152,12 @@ if (empty($error)){
             <label class="col-sm-4 control-label">プロフィール写真</label>
             <div class="col-sm-8">
               <input type="file" name="picture_path" class="form-control">
-              <?php if(isset($error['picture_path']) && $error['picture_path'] == 'type'){ ?>
+              <?php if(isset($error['picture_path']) && $error['picture_path'] == 'type'): ?>
                <p class="error">*写真は「.gif」「.jpg」「.png」の画像を指定してください。</p>
-              <?php } ?>
+               <?php endif; ?>
+               <?php if (!empty($error)): ?>
+                <p class="error">*恐れ入りますが、画像を改めて指定してください。</p>
+              <?php endif; ?>
             </div>
           </div>
 
