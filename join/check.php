@@ -26,7 +26,7 @@ if (!empty($_POST)) {
     mysqli_real_escape_string($db,$_SESSION['join']['picture_path'])
     );
 
-  mysqli_query($db,$sql) or die(mysql_error($db));
+  mysqli_query($db,$sql) or die(mysqli_error($db));
   header("location: thanks.php");
   exit();
   # code...
