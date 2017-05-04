@@ -7,11 +7,11 @@ if (!empty($_POST)) {
   if($_POST['nick_name'] == ''){
     $error['nick_name'] = 'blank';
   }
-
-  //e-mail
+ //e-mail
   if($_POST['email'] == ''){
   $error['email'] = 'blank';
   
+ 
 }
 //パスワード(空チェック,文字長チェック:4文字以上)
   if($_POST['password'] == '') {
