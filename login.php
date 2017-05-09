@@ -1,16 +1,26 @@
 <?php
+session_start();
 require('dbconnect.php');
+
+//自動ログイン処理
+if (isset($_COOKIE['email']) && !empty($_COOKIE['email'])){
+
+  //COOKIEに保存されているログイン情報が、入力されてPOST送信されたかのように$_POSTに値を代入
+  $_POST['email'] = $_COOKIE['email'];
+  $_POST['password'] = $_COOKIE['password'];
+  $_POST['save'] = 'on';
+}
 
 //post送信されていたら、emailとパスワード入力チェックを行い、どちらかが（あるいは両方とも）未入力の場合、「メールアドレスとパスワードをご記入ください」とパスワード入力欄の下に表示してください」
 if(!empty($_POST)){
   $email = htmlspecialchars($_POST['email'],ENT_QUOTES,'UTF-8');
   $password = htmlspecialchars($_POST['password'],ENT_QUOTES,'UTF-8');
 
-if($_POST['email'] == ''){
+if(empty($_POST['email'] == '')){
     $error['login'] = 'blank';
   }
 
-if($_POST['password'] == ''){
+if(empty($_POST['password'] == '')){
   $error['login'] = 'blank';
 }
   //ログイン処理
@@ -23,7 +33,25 @@ if($_POST['password'] == ''){
 
   $record = mysqli_query($db,$sql) or die(mysqli_error($db));
   if ($table = mysqli_fetch_assoc($record)){
-      //ログイン成功（今は何もしない、明日）
+      //ログイン成功
+      
+      //SESSION変数に、会員IDを保存
+    $_SESSION['login_member_id'] = $table['member_id'];
+
+     //SESSION変数にログイン時間を記録
+    $_SESSION['time'] = time();
+
+    // 自動ログインをONにしてたら、cookieにログイン情報を保存する
+    if ($_POST['save'] == 'on'){
+      //setcookie(保存するキー、保存する値、保存する期間(秒))
+      setcookie('email',$_POST['email'],time() + 60*60*24*14);
+      setcookie('password',$_POST['password'],time() + 60*60*24*14);
+
+      # code...
+    }
+     //ログイン後のindex.php（トップページ）に遷移
+     header("Location: index.php");
+    exit(); 
   }else{
     //ログイン失敗
     $error['login'] = 'faild';
@@ -103,6 +131,15 @@ if($_POST['password'] == ''){
 
             </div>
           </div>
+          <!-- 自動ログインのチェックボックス -->
+          <div class="form-group">
+          <label class="col-sm-4 control-label">自動ログイン</label>
+          <div class="col-sm-8">
+          <input type="checkbox" name="save"  value="on">
+          </div>
+          </div>
+
+
           <input type="submit" class="btn btn-default" value="ログイン">
         </form>
       </div>

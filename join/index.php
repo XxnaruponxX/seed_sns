@@ -14,12 +14,24 @@ if (!empty($_POST)) {
  
 }
 //パスワード(空チェック,文字長チェック:4文字以上)
+$password = htmlspecialchars($_POST['password'], ENT_QUOTES);
+$password2 = htmlspecialchars($_POST['password2'], ENT_QUOTES);
   if($_POST['password'] == '') {
   $error['password'] = 'blank';
 }else if (strlen($_POST['password']) < 4) {
   $error['password'] = 'length';
-  # code...
 }
+
+
+   if (!isset($_POST['password2']) || $_POST['password2'] == '') {
+        $error['password2'] = '確認用パスワードを入力してください。';
+    } 
+       
+        if ($password !== $password2){
+           $error['password2'] = 'パスワードが一致していません。';
+        }
+  # code...
+
 
 //画像ファイルの拡張子チェック($_FILES)
 $fileName = $_FILES['picture_path']['name'];
@@ -49,8 +61,8 @@ if (empty($error)){
   
   # code...
 
-
 }
+
 
 //書き直しの処理
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'rewrite'){
@@ -151,6 +163,24 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'rewrite'){
             <?php if (isset($error['password']) && $error['password'] == 'length') { ?>
              
             <p class="error">*パスワードは4文字以上で入力してください</p>
+            <?php }?>
+   
+            </div>
+          </div>
+
+          <!-- パスワード２ -->
+          <div class="form-group">
+            <label class="col-sm-4 control-label">確認用パスワード</label>
+            <div class="col-sm-8">
+              <input type="password" name="password2" class="form-control" placeholder="">
+              <?php if (isset($error['password2']) && $error['password2'] == '確認用パスワードを入力してください。'){ ?>
+
+              <p class="error">*確認用パスワードを入力してください。</p>
+
+            <?php  }?>
+            <?php if (isset($error['password2']) && $error['password2'] == 'パスワードが一致していません。') { ?>
+             
+            <p class="error">*パスワードが一致していません。</p>
             <?php }?>
    
             </div>

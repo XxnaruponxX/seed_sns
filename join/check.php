@@ -2,8 +2,14 @@
 
 session_start();
 
+
+
+
+
 //dbconnect.phpを読み込む
 require('../dbconnect.php');
+
+
 
 //セッションにデータがなかったらindex.phpへ遷移する
 if(!isset($_SESSION['join'])){
@@ -25,8 +31,9 @@ if (!empty($_POST)) {
     mysqli_real_escape_string($db,sha1($_SESSION['join']['password'])),
     mysqli_real_escape_string($db,$_SESSION['join']['picture_path'])
     );
+    mysqli_query($db,$sql) or die(mysqli_error($db));
 
-  mysqli_query($db,$sql) or die(mysqli_error($db));
+  //これをつけると、再読み込みでPOST送信しなくなる！  
   header("location: thanks.php");
   exit();
   # code...
