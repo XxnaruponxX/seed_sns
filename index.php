@@ -31,11 +31,11 @@ $sql = sprintf('SELECT * FROM `members` WHERE `member_id` = %d',mysqli_real_esca
 $record = mysqli_query($db,$sql) or die(mysqli_error($db));
 $member = mysqli_fetch_assoc($record);
 //DBへの接続
-$dsn = 'mysql:dbname=seed_sns;host=localhost';
-$user = 'root';
-$password='';
-$dbh = new PDO($dsn,$user,$password);
-$dbh->query('SET NAMES utf8');
+// $dsn = 'mysql:dbname=seed_sns;host=localhost';
+// $user = 'root';
+// $password='';
+// $dbh = new PDO($dsn,$user,$password);
+// $dbh->query('SET NAMES utf8');
 
 
 //sql文を実行する
@@ -53,38 +53,48 @@ if (!empty($_POST)){//POST送信したときのみ動くようにする
   header("location: index.php");
   exit();
   # code...
-    $stmt = $dbh->prepare($sql);
-  $stmt->execute();
+  //   $stmt = $dbh->prepare($sql);
+  // $stmt->execute();
 }
   //SELECT文の実行
 
   //SQL文作成(SELECT文)
-  $sql = 'SELECT * FROM `tweets` ORDER BY `created` DESC;';
+
+       //投稿を取得する
+       // $sql = 'SELECT * FROM `tweets`;';
+       $sql = 'SELECT `members`.`nick_name`,`members`.`picture_path`,`tweets`.* FROM `tweets` INNER JOIN `members` on `tweets`.`member_id` = `members`.`member_id`';
+      $tweets = mysqli_query($db,$sql) or die(mysqli_error($db));
+ 
+
+       $tweets_array = array();
+       while ($tweet = mysqli_fetch_assoc($tweets)) {
+       $tweets_array[] = $tweet;
+       }
 
   //実行
-$stmt = $dbh->prepare($sql);
-  $stmt->execute();
+// $stmt = $dbh->prepare($sql);
+//   $stmt->execute();
     
-   //配列で取得したデータを格納
-   //配列を初期化
-   $tweet_datas = array();
-  //繰り返し文でデータ取得(フェッチ)
-  while (1) {
-    $rec = $stmt->fetch(PDO::FETCH_ASSOC);
-    if ($rec == false) {
-      break;
-      # code...
-    }
-    $tweet_datas[] = $rec;
+//    //配列で取得したデータを格納
+//    //配列を初期化
+//    $tweet_datas = array();
+//   //繰り返し文でデータ取得(フェッチ)
+//   while (1) {
+//     $rec = $stmt->fetch(PDO::FETCH_ASSOC);
+//     if ($rec == false) {
+//       break;
+//       # code...
+//     }
+//     $tweet_datas[] = $rec;
 
-  }
+  
     # code...
   
   
 
    
 
-$dbh = null;
+// $dbh = null;
 
 
 
@@ -127,7 +137,7 @@ $dbh = null;
               <a class="navbar-brand" href="index.html"><span class="strong-title"><i class="fa fa-twitter-square"></i> Seed SNS</span></a>
           </div>
           <!-- Collect the nav links, forms, and other content for toggling -->
-          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <div class="collapse navbar-sssssssssssssssssssssssssssssssssssssssscollapse" id="bs-example-navbar-collapse-1">
               <ul class="nav navbar-nav navbar-right">
                 <li><a href="logout.php">ログアウト</a></li>
               </ul>
@@ -158,24 +168,27 @@ $dbh = null;
           </ul>
         </form>
       </div>
-      <?php foreach ($tweet_datas as $tweet_each){ ?>
+      
       <div class="col-md-8 content-margin-top">
+      <?php foreach ($tweets_array as $tweet_each){ ?>
         <div class="msg">
-          <img src="http://c85c7a.medialib.glogster.com/taniaarca/media/71/71c8671f98761a43f6f50a282e20f0b82bdb1f8c/blog-images-1349202732-fondo-steve-jobs-ipad.jpg" width="48" height="48">
+          <img src= "member_picture/<?php echo $tweet_each['picture_path'];?>" width="48" height="48">
           <p>
-            <?php echo $tweet_each['tweet']; ?><span class="name"> (Seed kun) </span>
+            <?php echo $tweet_each['tweet']; ?><span class="name"> (<?php echo $tweet_each['nick_name'];?>) </span>
             [<a href="#">Re</a>]
           </p>
           <p class="day">
             <a href="view.html">
-              2016-01-28 18:04
+             <?php echo $tweet_each['created']; ?>
             </a>
             [<a href="#" style="color: #00994C;">編集</a>]
             [<a href="#" style="color: #F33;">削除</a>]
           </p>
+
         </div>
+        <?php } ?>
       </div>
-      <?php } ?>
+      
       </div>
       </div>
     
