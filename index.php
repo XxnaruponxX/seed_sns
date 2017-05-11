@@ -71,6 +71,19 @@ if (!empty($_POST)){//POST送信したときのみ動くようにする
        $tweets_array[] = $tweet;
        }
 
+       //返信の場合
+       if (isset($_REQUEST['res'])) {
+        // 返信元のデータ（つぶやきとニックネーム）取得する
+        $sql = 'SELECT `tweets`.`tweet`,`members`.`nick_name` FROM `tweets` INNER JOIN `members` on `tweets`.`member_id` = `members`.`member_id` WHERE `tweet_id`='.$_REQUEST['res'];
+ 
+        $reply = mysqli_query($db,$sql) or die(mysqli_error($db));
+        $reply_table = mysqli_fetch_assoc($reply);
+
+        //「@ニックネーム　つぶやき」　という文字列をセット
+        $reply_post = '@'.$reply_table['nick_name'].' '.$reply_table['tweet'];
+         # code...
+       }
+
   //実行
 // $stmt = $dbh->prepare($sql);
 //   $stmt->execute();
@@ -137,7 +150,7 @@ if (!empty($_POST)){//POST送信したときのみ動くようにする
               <a class="navbar-brand" href="index.html"><span class="strong-title"><i class="fa fa-twitter-square"></i> Seed SNS</span></a>
           </div>
           <!-- Collect the nav links, forms, and other content for toggling -->
-          <div class="collapse navbar-sssssssssssssssssssssssssssssssssssssssscollapse" id="bs-example-navbar-collapse-1">
+          <div class="collapse navbar-scollapse" id="bs-example-navbar-collapse-1">
               <ul class="nav navbar-nav navbar-right">
                 <li><a href="logout.php">ログアウト</a></li>
               </ul>
@@ -156,7 +169,12 @@ if (!empty($_POST)){//POST送信したときのみ動くようにする
             <div class="form-group">
               <label class="col-sm-4 control-label">つぶやき</label>
               <div class="col-sm-8">
-                <textarea name="tweet" cols="50" rows="5" class="form-control" placeholder="例：Hello World!"></textarea>
+              <?php if (isset($reply_post)){ ?>
+              <textarea name="tweet" cols="50" rows="5" class="form-control" placeholder="例：Hello World!"><?php echo $reply_post; ?></textarea>
+              <input type="hidden" name="reply_tweet_id" value="<?php echo $_REQUEST['res'];?>">
+              <?php }else{ ?>
+               <textarea name="tweet" cols="50" rows="5" class="form-control" placeholder="例：Hello World!"></textarea>
+                <?php } ?>
               </div>
             </div>
           <ul class="paging">
@@ -175,10 +193,10 @@ if (!empty($_POST)){//POST送信したときのみ動くようにする
           <img src= "member_picture/<?php echo $tweet_each['picture_path'];?>" width="48" height="48">
           <p>
             <?php echo $tweet_each['tweet']; ?><span class="name"> (<?php echo $tweet_each['nick_name'];?>) </span>
-            [<a href="#">Re</a>]
+            [<a href="index.php?res=<?php echo $tweet_each['tweet_id']; ?>">Re</a>]
           </p>
           <p class="day">
-            <a href="view.html">
+            <a href="view.php?tweet_id=<?php echo $tweet_each['tweet_id']; ?>">
              <?php echo $tweet_each['created']; ?>
             </a>
             [<a href="#" style="color: #00994C;">編集</a>]
