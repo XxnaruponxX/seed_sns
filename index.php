@@ -218,13 +218,13 @@ function h($input_value){
             | <a href="view.php?tweet_id=<?php echo $tweet?>">返信元のつぶやき</a>
             <?php } ?>
             <?php
-            if ($_SESSION['login_member_id'] == $tweet_each['member_id']) {
-               # code...
-             } 
-            ?>
-            [<a href="edit.php?tweet_id=<?php echo $tweet_each['tweet_id']; ?>" style="color: #00994C;">編集</a>]
+            if ($_SESSION['login_member_id'] == $tweet_each['member_id']) {?>
+               [<a href="edit.php?tweet_id=<?php echo $tweet_each['tweet_id']; ?>" style="color: #00994C;">編集</a>]
            [<a href="delete.php?tweet_id=<?php echo $tweet_each[' tweet_id']; ?>" style="color: #F33;">削除</a>]
           </p>
+               
+            <?php }?> 
+                      
 
         </div>
         <?php } ?>
