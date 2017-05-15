@@ -1,6 +1,7 @@
 <?php
 
 session_start();
+//データベース接続処理
 require('dbconnect.php');
 
 if (isset($_REQUEST['tweet_id'])) {
@@ -79,8 +80,8 @@ $sql = 'SELECT `members`.`nick_name`,`members`.`picture_path`,`tweets`.`tweet`,`
   </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="../assets/js/jquery-3.1.1.js"></script>
-    <script src="../assets/js/jquery-migrate-1.4.1.js"></script>
-    <script src="../assets/js/bootstrap.js"></script>
+    <script src="assets/js/jquery-3.1.1.js"></script>
+    <script src="assets/js/jquery-migrate-1.4.1.js"></script>
+    <script src="assets/js/bootstrap.js"></script>
   </body>
 </html>

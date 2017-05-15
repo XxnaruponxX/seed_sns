@@ -40,9 +40,17 @@ $member = mysqli_fetch_assoc($record);
 
 //sql文を実行する
 if (!empty($_POST)){//POST送信したときのみ動くようにする
-  $tweet = htmlspecialchars($_POST['tweet'],ENT_QUOTES,'UTF-8');
+  //$tweet = htmlspecialchars($_POST['tweet'],ENT_QUOTES,'UTF-8');
+  $tweet = h($_POST['tweet']);
   $login_member_id = $_SESSION['login_member_id'];
-  $reply_tweet_id = 0;
+
+  if (isset($_POST['reply_tweet_id'])) {
+     $reply_tweet_id = $_POST['reply_tweet_id'];
+   }else{
+      $reply_tweet_id = 0;
+    # code...
+  }
+ 
   $sql = sprintf('INSERT INTO `tweets`(`tweet`,`member_id`,`reply_tweet_id`,`created`,`modified`) VALUES ("%s","%s","%s",now(),now());',
 
     mysqli_real_escape_string($db,$tweet),
@@ -62,7 +70,7 @@ if (!empty($_POST)){//POST送信したときのみ動くようにする
 
        //投稿を取得する
        // $sql = 'SELECT * FROM `tweets`;';
-       $sql = 'SELECT `members`.`nick_name`,`members`.`picture_path`,`tweets`.* FROM `tweets` INNER JOIN `members` on `tweets`.`member_id` = `members`.`member_id`';
+       $sql = 'SELECT `members`.`nick_name`,`members`.`picture_path`,`tweets`.* FROM `tweets` INNER JOIN `members` on `tweets`.`member_id` = `members`.`member_id` WHERE `delete_flag`=0';
       $tweets = mysqli_query($db,$sql) or die(mysqli_error($db));
  
 
@@ -80,7 +88,7 @@ if (!empty($_POST)){//POST送信したときのみ動くようにする
         $reply_table = mysqli_fetch_assoc($reply);
 
         //「@ニックネーム　つぶやき」　という文字列をセット
-        $reply_post = '@'.$reply_table['nick_name'].' '.$reply_table['tweet'];
+        $reply_post = '@'.$reply_table['nick_name'].' '.$reply_table['tweet'].' ← ';
          # code...
        }
 
@@ -109,8 +117,13 @@ if (!empty($_POST)){//POST送信したときのみ動くようにする
 
 // $dbh = null;
 
+// $input_value:変数
+// h:関数名
+// return oo :戻り値
+function h($input_value){
+  return htmlspecialchars($input_value,ENT_QUOTES,'UTF-8');
 
-
+}
 
 
 ?>
@@ -199,8 +212,18 @@ if (!empty($_POST)){//POST送信したときのみ動くようにする
             <a href="view.php?tweet_id=<?php echo $tweet_each['tweet_id']; ?>">
              <?php echo $tweet_each['created']; ?>
             </a>
+            <?php if ($tweet_each['reply_tweet_id'] > 0){ ?>
+             
+                        
+            | <a href="view.php?tweet_id=<?php echo $tweet?>">返信元のつぶやき</a>
+            <?php } ?>
+            <?php
+            if ($_SESSION['login_member_id'] == $tweet_each['member_id']) {
+               # code...
+             } 
+            ?>
             [<a href="#" style="color: #00994C;">編集</a>]
-            [<a href="#" style="color: #F33;">削除</a>]
+            [<a href="delete.php?tweet_id=<?php echo $tweet_each['tweet_id']; ?>" style="color: #F33;">削除</a>]
           </p>
 
         </div>
