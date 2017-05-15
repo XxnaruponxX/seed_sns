@@ -6,18 +6,14 @@ require('dbconnect.php');
 
 if (isset($_REQUEST['tweet_id'])) {
 
-$sql = 'SELECT `members`.`nick_name`,`members`.`picture_path`,`tweets`.`tweet`,`tweets`.`created`,`tweets`.`tweet_id` FROM `tweets` INNER JOIN `members`on `tweets`.`member_id` = `members`.`member_id` WHERE `tweet_id`='.$_REQUEST['tweet_id'];
+$sql = 'SELECT `members`.`nick_name`,`members`.`picture_path`,`tweets`.`tweet`,`tweets`.`created` FROM `tweets` INNER JOIN `members` on `tweets`.`member_id` = `members`.`member_id` WHERE `tweet_id`='.$_REQUEST['tweet_id'];
  
  $reply = mysqli_query($db,$sql) or die(mysqli_error($db));
         $reply_table = mysqli_fetch_assoc($reply);
 }
-       
 
 
 ?>
-
-
-
 <!DOCTYPE html>
 <html lang="ja">
   <head>
@@ -51,7 +47,7 @@ $sql = 'SELECT `members`.`nick_name`,`members`.`picture_path`,`tweets`.`tweet`,`
           <!-- Collect the nav links, forms, and other content for toggling -->
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
               <ul class="nav navbar-nav navbar-right">
-                <li><a href="logout.html">ログアウト</a></li>
+                <li><a href="logout.php">ログアウト</a></li>
               </ul>
           </div>
           <!-- /.navbar-collapse -->
@@ -68,15 +64,18 @@ $sql = 'SELECT `members`.`nick_name`,`members`.`picture_path`,`tweets`.`tweet`,`
           <p>
             つぶやき : <br>
             <?php echo $reply_table['tweet']?>
+            </p>
+            <form method="post" action="" class="form-horizontal" role="form">
+              <textarea name="tweet" cols="50" rows="5" class="form-control" placeholder="例：Hello World!"></textarea>
+              <input type="submit" class="btn btn-info" value="保存">
+            </form>
           </p>
           <p class="day">
-            <?php echo $reply_table['created']; ?>
-          [<a href="delete.php?tweet_id=<?php echo $reply_table['tweet_id']; ?>" style="color: #F33;">削除</a>]
-          </p>
-
+            
           </p>
         </div>
         <a href="index.php">&laquo;&nbsp;一覧へ戻る</a>
+
       </div>
     </div>
   </div>

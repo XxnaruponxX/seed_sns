@@ -163,7 +163,7 @@ function h($input_value){
               <a class="navbar-brand" href="index.html"><span class="strong-title"><i class="fa fa-twitter-square"></i> Seed SNS</span></a>
           </div>
           <!-- Collect the nav links, forms, and other content for toggling -->
-          <div class="collapse navbar-scollapse" id="bs-example-navbar-collapse-1">
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
               <ul class="nav navbar-nav navbar-right">
                 <li><a href="logout.php">ログアウト</a></li>
               </ul>
@@ -222,8 +222,8 @@ function h($input_value){
                # code...
              } 
             ?>
-            [<a href="#" style="color: #00994C;">編集</a>]
-            [<a href="delete.php?tweet_id=<?php echo $tweet_each['tweet_id']; ?>" style="color: #F33;">削除</a>]
+            [<a href="edit.php?tweet_id=<?php echo $tweet_each['tweet_id']; ?>" style="color: #00994C;">編集</a>]
+           [<a href="delete.php?tweet_id=<?php echo $tweet_each[' tweet_id']; ?>" style="color: #F33;">削除</a>]
           </p>
 
         </div>
