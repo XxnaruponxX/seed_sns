@@ -6,7 +6,7 @@ require('dbconnect.php');
 
 if (isset($_REQUEST['tweet_id'])) {
 
-$sql = 'SELECT `members`.`nick_name`,`members`.`picture_path`,`tweets`.`tweet`,`tweets`.`created`,`tweets`.`tweet_id` FROM `tweets` INNER JOIN `members`on `tweets`.`member_id` = `members`.`member_id` WHERE `tweet_id`='.$_REQUEST['tweet_id'];
+$sql = 'SELECT `members`.`nick_name`,`members`.`picture_path`,`tweets`.`tweet`,`tweets`.`created`,`tweets`.`tweet_id`,`members`.`member_id` FROM `tweets` INNER JOIN `members`on `tweets`.`member_id` = `members`.`member_id` WHERE `tweet_id`='.$_REQUEST['tweet_id'];
  
  $reply = mysqli_query($db,$sql) or die(mysqli_error($db));
         $reply_table = mysqli_fetch_assoc($reply);
@@ -70,9 +70,13 @@ $sql = 'SELECT `members`.`nick_name`,`members`.`picture_path`,`tweets`.`tweet`,`
             <?php echo $reply_table['tweet']?>
           </p>
           <p class="day">
+         
             <?php echo $reply_table['created']; ?>
+             <?php
+           if ($_SESSION['login_member_id'] == $reply_table['member_id']){?>
           [<a href="delete.php?tweet_id=<?php echo $reply_table['tweet_id']; ?>" style="color: #F33;">削除</a>]
           </p>
+          <?php }?>
 
           </p>
         </div>
