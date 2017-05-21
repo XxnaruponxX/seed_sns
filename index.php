@@ -90,8 +90,13 @@ if (!empty($_POST)){//POST送信したときのみ動くようにする
     //2.必要なページを計算
     //1ページに表示する行数
     $row = 5;
-    $sql = 'SELECT COUNT(*) as cnt FROM `tweets` INNER JOIN `members` on `tweets`.`member_id` = `members`.`member_id` WHERE `delete_flag`=0 ORDER bY `tweets`.`created` DESC';
-
+    if (isset($_GET['search_word'])&&!empty($_GET['search_word'])) {
+       $sql = sprintf('SELECT COUNT(*) as cnt FROM `tweets` INNER JOIN `members` on `tweets`.`member_id` = `members`.`member_id` WHERE `delete_flag`=0 AND `tweet` LIKE "%%%s%%" ORDER bY `tweets`.`created` DESC ',mysqli_real_escape_string($db,$_GET['search_word']));
+      }else{
+         $sql = 'SELECT COUNT(*) as cnt FROM `tweets` INNER JOIN `members` on `tweets`.`member_id` = `members`.`member_id` WHERE `delete_flag`=0 ORDER bY `tweets`.`created` DESC';
+      }
+   
+    
     $record_cnt = mysqli_query($db,$sql) or die(mysqli_error($db));
 
     $table_cnt = mysqli_fetch_assoc($record_cnt);
@@ -107,7 +112,14 @@ if (!empty($_POST)){//POST送信したときのみ動くようにする
 
        //投稿を取得する
        // $sql = 'SELECT * FROM `tweets`;';
-       $sql = sprintf('SELECT `members`.`nick_name`,`members`.`picture_path`,`tweets`.* FROM `tweets` INNER JOIN `members` on `tweets`.`member_id` = `members`.`member_id` WHERE `delete_flag`=0 ORDER bY `created` DESC LIMIT %d,%d',$start,$row);
+       //キーワードで検索された場合
+      if (isset($_GET['search_word'])&& !empty($_GET['search_word'])) {
+        $sql = sprintf('SELECT `members`.`nick_name`,`members`.`picture_path`,`tweets`.* FROM `tweets` INNER JOIN `members` on `tweets`.`member_id` = `members`.`member_id` WHERE `delete_flag`=0 AND `tweet` LIKE "%%%s%%" ORDER bY `created` DESC LIMIT %d,%d',mysqli_real_escape_string($db,$_GET['search_word']),$start,$row);
+        
+        }else{
+        $sql = sprintf('SELECT `members`.`nick_name`,`members`.`picture_path`,`tweets`.* FROM `tweets` INNER JOIN `members` on `tweets`.`member_id` = `members`.`member_id` WHERE `delete_flag`=0 ORDER bY `created` DESC LIMIT %d,%d',$start,$row);
+      }
+      
       $tweets = mysqli_query($db,$sql) or die(mysqli_error($db));
  
 
@@ -230,15 +242,26 @@ function h($input_value){
           <ul class="paging">
             <input type="submit" class="btn btn-info" value="つぶやく">
                 &nbsp;&nbsp;&nbsp;&nbsp;
+                <?php
+                $word = '';
+                if (isset($_GET['search_word'])&& !empty($_GET['search_word'])) {
+                  $word = '&search_word='.$_GET['search_word'];
+                }?>
                 <li>
                 <?php if ($page > 1){ ?>
-                  <a href="index.php?page=<?php echo $page-1; ?>" class="btn btn-default">前</a>
+                  <a href="index.php?page=<?php echo $page-1; ?><?php echo $word; ?>" class="btn btn-default">前</a>
                 <?php }else{ ?>
                 前
                 <?php } ?>
                 </li>
                 &nbsp;&nbsp;|&nbsp;&nbsp;
-                <li><a href="index.php?page=<?php echo $page+1; ?>" class="btn btn-default">次</a></li>
+                <li>
+                <?php if ($page < $maxPage){ ?>
+                <a href="index.php?page=<?php echo $page+1; ?><?php echo $word; ?>" class="btn btn-default">次</a>
+                <?php }else{ ?>
+                次
+                <?php } ?>
+                </li>
           </ul>
         </form>
       </div>

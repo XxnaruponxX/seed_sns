@@ -5,7 +5,7 @@ session_start();
 require('dbconnect.php');
 
 if (isset($_REQUEST['tweet_id'])) {
-
+//tweets*FROMと書くとtweetsのデータは全部取ってこれる
 $sql = 'SELECT `members`.`nick_name`,`members`.`picture_path`,`tweets`.`tweet`,`tweets`.`created`,`tweets`.`tweet_id`,`members`.`member_id` FROM `tweets` INNER JOIN `members`on `tweets`.`member_id` = `members`.`member_id` WHERE `tweet_id`='.$_REQUEST['tweet_id'];
  
  $reply = mysqli_query($db,$sql) or die(mysqli_error($db));
