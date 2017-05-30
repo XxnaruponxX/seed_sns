@@ -1,0 +1,21 @@
+{
+    "name": "naru",
+    "age": "19",
+    "gender": "male",
+    "hobby": [
+        "sk8",
+        "travel"
+    ],
+    "skills": [
+        "HTML",
+        "CSS",
+        "JavaScript",
+        {
+            "PHP": [
+                "オブジェクト指向",
+                "JSON/API"
+            ]
+        },
+        "MySQL"
+    ]
+}
